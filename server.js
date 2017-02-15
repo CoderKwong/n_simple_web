@@ -20,9 +20,6 @@ http.createServer(function (req, res) {
         res.statusCode = 404
         res.end('no such location')
     });
-    response.writeHead(200, {'Content-Type': 'text/plain'});
-    // 发送响应数据 "Hello World"
-    response.end('Hello World\n');
 }).listen(7777)
 
 handler.on('error', function (err) {
