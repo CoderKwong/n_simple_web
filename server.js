@@ -2,38 +2,33 @@
  * Created by kwonghinho on 2017/2/15.
  */
 var http = require('http')
-    , exec = require('exec')
+var createHandler = require('github-webhook-handler')
+var handler = createHandler({ path: '/', secret: 'kwong' })
+// 上面的 secret 保持和 GitHub 后台设置的一致
 
-const PORT = 9988
-    , PATH = '../html'
+function run_cmd(cmd, args, callback) {
+    var spawn = require('child_process').spawn;
+    var child = spawn(cmd, args);
+    var resp = "";
 
-var deployServer = http.createServer(function(request, response) {
-    if (request.url.search(/deploy\/?$/i) > 0) {
+    child.stdout.on('data', function(buffer) { resp += buffer.toString(); });
+    child.stdout.on('end', function() { callback (resp) });
+}
 
-        var commands = [
-            'cd ' + PATH,
-            'git pull'
-        ].join(' && ')
+http.createServer(function (req, res) {
+    handler(req, res, function (err) {
+        res.statusCode = 404
+        res.end('no such location')
+    })
+}).listen(7777)
 
-        exec(commands, function(err, out, code) {
-            if (err instanceof Error) {
-                response.writeHead(500)
-                response.end('Server Internal Error.')
-                throw err
-            }
-            process.stderr.write(err)
-            process.stdout.write(out)
-            response.writeHead(200)
-            response.end('Deploy Done.')
-
-        })
-
-    } else {
-
-        response.writeHead(404)
-        response.end('Not Found.')
-
-    }
+handler.on('error', function (err) {
+    console.error('Error:', err.message)
 })
 
-deployServer.listen(PORT)
+handler.on('push', function (event) {
+    console.log('Received a push event for %s to %s',
+        event.payload.repository.name,
+        event.payload.ref);
+    run_cmd('sh', ['./deploy.sh',event.payload.repository.name], function(text){ console.log(text) });
+})
