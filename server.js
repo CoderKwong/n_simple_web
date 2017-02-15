@@ -19,7 +19,9 @@ http.createServer(function (req, res) {
     handler(req, res, function (err) {
         res.statusCode = 404
         res.end('no such location')
-    })
+    });
+    // 发送响应数据 "Hello World"
+    response.end('Hello World\n');
 }).listen(7777)
 
 handler.on('error', function (err) {
