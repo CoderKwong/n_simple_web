@@ -58,7 +58,6 @@ function getPhone() {
                                 if(err){
                                     console.log('[query] - : '+err);
                                 }else{
-                                    // console.log('不存在,执行插入操作,插入成功');
                                     insertCount++;
                                     if(i==phoneList.length-1){
                                         console.log('已插入: '+insertCount+' 条');
