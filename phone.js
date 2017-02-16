@@ -48,26 +48,37 @@ function getPhone() {
             var phoneList = JSON.parse(jsonStr).data.list,phonelistStr='';
             console.log('正在执行第 '+count+' 次查询');count++;
             for(var i in phoneList){
-                var sql = 'select * from wechat where phone = \''+phoneList[i]+'\'';
-                (function (i) {
-                    once(sql,function (err, result) {
-                        if(result.length>0){
-                            // console.log(phoneList[i]+'----已存在,不执行插入操作');
-                        }else{
-                            once('insert into wechat(phone) values(\''+phoneList[i]+'\')',function (err, result) {
-                                if(err){
-                                    console.log('[query] - : '+err);
-                                }else{
-                                    console.log('不存在,执行插入操作,插入成功');
-                                    insertCount++;
-                                    if(i==phoneList.length-1){
-                                        console.log('已插入: '+insertCount+' 条');
-                                    }
-                                }
-                            });
+                once('insert into wechat(phone) values(\''+phoneList[i]+'\')',function (err, result) {
+                    if (err) {
+                        console.log('[query] - : ' + err);
+                    } else {
+                        console.log('执行插入操作,插入成功');
+                        insertCount++;
+                        if (i == phoneList.length - 1) {
+                            console.log('已插入: ' + insertCount + ' 条');
                         }
-                    });
-                })(i);
+                    }
+                })
+                // var sql = 'select * from wechat where phone = \''+phoneList[i]+'\'';
+                // (function (i) {
+                //     once(sql,function (err, result) {
+                //         if(result.length>0){
+                //             // console.log(phoneList[i]+'----已存在,不执行插入操作');
+                //         }else{
+                //             once('insert into wechat(phone) values(\''+phoneList[i]+'\')',function (err, result) {
+                //                 if(err){
+                //                     console.log('[query] - : '+err);
+                //                 }else{
+                //                     console.log('不存在,执行插入操作,插入成功');
+                //                     insertCount++;
+                //                     if(i==phoneList.length-1){
+                //                         console.log('已插入: '+insertCount+' 条');
+                //                     }
+                //                 }
+                //             });
+                //         }
+                //     });
+                // })(i);
             }
         })
     });
