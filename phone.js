@@ -52,7 +52,7 @@ function getPhone() {
                 (function (i) {
                     once(sql,function (err, result) {
                         if(result.length>0){
-                            console.log(phoneList[i]+'----已存在,不执行插入操作');
+                            // console.log(phoneList[i]+'----已存在,不执行插入操作');
                         }else{
                             once('insert into wechat(phone) values(\''+phoneList[i]+'\')',function (err, result) {
                                 if(err){
@@ -60,6 +60,9 @@ function getPhone() {
                                 }else{
                                     console.log('不存在,执行插入操作,插入成功');
                                     insertCount++;
+                                    if(i==phoneList.length-1){
+                                        console.log('已插入: '+insertCount+' 条');
+                                    }
                                 }
                             });
                         }
