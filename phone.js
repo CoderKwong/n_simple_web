@@ -45,7 +45,7 @@ function getPhone() {
             jsonStr += chunk;
         });
         res.on('end',function (chunk) {
-            var phoneList = JSON.parse(jsonStr).data.list;
+            var phoneList = JSON.parse(jsonStr).data.list,phonelistStr='';
             console.log('正在执行第 '+count+' 次查询');count++;
             for(var i in phoneList){
                 var sql = 'select * from wechat where phone = \''+phoneList[i]+'\'';
@@ -58,11 +58,8 @@ function getPhone() {
                                 if(err){
                                     console.log('[query] - : '+err);
                                 }else{
-                                    // console.log('不存在,执行插入操作,插入成功');
+                                    console.log('不存在,执行插入操作,插入成功');
                                     insertCount++;
-                                    if(i==phoneList.length-1){
-                                        console.log('已插入: '+insertCount+' 条');
-                                    }
                                 }
                             });
                         }
